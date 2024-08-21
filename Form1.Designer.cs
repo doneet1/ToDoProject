@@ -118,7 +118,7 @@
             this.stripMenuNewFile.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.stripMenuNewFile.Name = "stripMenuNewFile";
             this.stripMenuNewFile.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.stripMenuNewFile.Size = new System.Drawing.Size(180, 22);
+            this.stripMenuNewFile.Size = new System.Drawing.Size(155, 22);
             this.stripMenuNewFile.Text = "&Nowy";
             this.stripMenuNewFile.Click += new System.EventHandler(this.stripMenuNewFile_Click);
             // 
@@ -128,14 +128,14 @@
             this.stripMenuOpenFile.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.stripMenuOpenFile.Name = "stripMenuOpenFile";
             this.stripMenuOpenFile.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.stripMenuOpenFile.Size = new System.Drawing.Size(180, 22);
+            this.stripMenuOpenFile.Size = new System.Drawing.Size(155, 22);
             this.stripMenuOpenFile.Text = "&Otwórz";
             this.stripMenuOpenFile.Click += new System.EventHandler(this.stripMenuOpenFile_Click);
             // 
             // stripMenuSeparator
             // 
             this.stripMenuSeparator.Name = "stripMenuSeparator";
-            this.stripMenuSeparator.Size = new System.Drawing.Size(177, 6);
+            this.stripMenuSeparator.Size = new System.Drawing.Size(152, 6);
             // 
             // stripMenuSaveFile
             // 
@@ -143,7 +143,7 @@
             this.stripMenuSaveFile.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.stripMenuSaveFile.Name = "stripMenuSaveFile";
             this.stripMenuSaveFile.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.stripMenuSaveFile.Size = new System.Drawing.Size(180, 22);
+            this.stripMenuSaveFile.Size = new System.Drawing.Size(155, 22);
             this.stripMenuSaveFile.Text = "&Zapisz";
             this.stripMenuSaveFile.Click += new System.EventHandler(this.stripMenuSaveFile_Click);
             // 

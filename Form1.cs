@@ -9,13 +9,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Reflection;
 
 namespace ToDoProject
 {
     public partial class mainForm : Form
     {
         private string lastOpenedFilePath = "";
-        private bool isDialogOpen = false;
+        private int editIndex = -1;
         public mainForm()
         {
             InitializeComponent();
@@ -29,15 +30,58 @@ namespace ToDoProject
         }
         private void mainForm_KeyUp(object sender, KeyEventArgs e)
         {
-            //Create new Task
+            //Create new Task or Edit Task
             if (e.KeyCode == Keys.Return)
             {
-                createNewTask();
+                if (checkIfTextBoxExists("dynamicTextBox") != null)
+                {
+                    editTask();
+                }
+                else
+                {
+                    createNewTask();
+                }
+            }
+            //Edit a Task
+            if (e.Control && e.KeyCode == Keys.E)
+            {
+                if (checkIfTextBoxExists("dynamicTextBox") == null && tasksListBox.SelectedIndex != -1)
+                {
+                    createTextBox();
+                }
+            }
+            //Cancel editing a Task
+            if (e.KeyCode == Keys.Escape)
+            {
+                if (checkIfTextBoxExists("dynamicTextBox") != null)
+                {
+                    checkIfTextBoxExists("dynamicTextBox").Dispose();
+                    this.Controls.Remove(checkIfTextBoxExists("dynamicTextBox"));
+                }
             }
             //Delete selected Task
             if (e.KeyCode == Keys.Delete)
             {
-                deleteTask();
+                if (editIndex != -1)
+                {
+                    deleteTask();
+                }
+            }
+            //Select next Task
+            if(e.KeyCode == Keys.Down)
+            {
+                if (tasksListBox.SelectedIndex < tasksListBox.Items.Count - 1 && editIndex == -1)
+                {
+                    tasksListBox.SelectedIndex++;
+                }
+            }
+            //Select previous Task
+            if (e.KeyCode == Keys.Up)
+            {
+                if (tasksListBox.SelectedIndex != 0 && editIndex == -1)
+                {
+                    tasksListBox.SelectedIndex--;
+                }
             }
         }
         private void mainForm_KeyDown(object sender, KeyEventArgs e)
@@ -92,12 +136,58 @@ namespace ToDoProject
         }
         private void createNewTask()
         {
-            if (!string.IsNullOrWhiteSpace(taskTextBox.Text))
+            Control[] foundDynamicTextBox = this.Controls.Find("dynamicTextBox", true);
+            if(foundDynamicTextBox.Length == 0)
             {
-                tasksListBox.Items.Add(taskTextBox.Text);
-                taskTextBox.Text = "";
+                if (!string.IsNullOrWhiteSpace(taskTextBox.Text))
+                {
+                    tasksListBox.Items.Add(taskTextBox.Text);
+                    taskTextBox.Text = "";
+                }
+                taskTextBox.Focus();
             }
-            taskTextBox.Focus();
+        }
+        private TextBox checkIfTextBoxExists(string textBoxName)
+        {
+            Control[] foundDynamicTextBox = this.Controls.Find(textBoxName, true);
+            if (foundDynamicTextBox.Length > 0 && foundDynamicTextBox[0] is TextBox)
+            {
+                return (TextBox)foundDynamicTextBox[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
+        private void createTextBox()
+        {
+            TextBox dynamicTextBox = new TextBox();
+
+            Rectangle itemRectangle = tasksListBox.GetItemRectangle(tasksListBox.SelectedIndex);
+            editIndex = tasksListBox.SelectedIndex;
+            int x = itemRectangle.X;
+            int y = itemRectangle.Y;
+            dynamicTextBox.Location = new Point(x + 29, y + 101);
+            dynamicTextBox.Size = new Size(343, 30);
+            dynamicTextBox.Text = tasksListBox.Items[tasksListBox.SelectedIndex].ToString();
+            dynamicTextBox.Name = "dynamicTextBox";
+
+            if (tasksListBox.SelectedIndex != -1)
+            {
+                this.Controls.Add(dynamicTextBox);
+                dynamicTextBox.BringToFront();
+                dynamicTextBox.Focus();
+            }
+        }
+        private void editTask()
+        {
+            if (checkIfTextBoxExists("dynamicTextBox") != null)
+            {
+                tasksListBox.Items[editIndex] = checkIfTextBoxExists("dynamicTextBox").Text;
+                checkIfTextBoxExists("dynamicTextBox").Dispose();
+                this.Controls.Remove(checkIfTextBoxExists("dynamicTextBox"));
+                editIndex = -1;
+            }
         }
         private void deleteTask()
         {
@@ -126,7 +216,10 @@ namespace ToDoProject
             tasksListBox.Items.Clear();
             foreach (string line in lines)
             {
-                tasksListBox.Items.Add(line);
+                if (!string.IsNullOrEmpty(line) || !string.IsNullOrWhiteSpace(line))
+                {
+                    tasksListBox.Items.Add(line);
+                }
             }
         }
         private void openNewFile()
